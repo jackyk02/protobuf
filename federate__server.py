@@ -79,7 +79,7 @@ class __serverreactor:
     
     
     def reaction_function_0(self, out_parameter):
-        size_in_bytes = 3 * 1024 * 1024  # 3 MB
+        size_in_bytes = 100 * 1024 * 1024  # 3 MB
         self.large_param = bytes([0] * size_in_bytes)
         out_parameter.set(self.large_param)
         return 0
