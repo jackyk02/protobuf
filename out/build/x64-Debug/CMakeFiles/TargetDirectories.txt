@@ -1,0 +1,12 @@
+C:/Users/jacky/Desktop/simple_multi/fed-gen/Main/src-gen/federate__server/out/build/x64-Debug/CMakeFiles/LinguaFrancafederate__server.dir
+C:/Users/jacky/Desktop/simple_multi/fed-gen/Main/src-gen/federate__server/out/build/x64-Debug/CMakeFiles/edit_cache.dir
+C:/Users/jacky/Desktop/simple_multi/fed-gen/Main/src-gen/federate__server/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir
+C:/Users/jacky/Desktop/simple_multi/fed-gen/Main/src-gen/federate__server/out/build/x64-Debug/CMakeFiles/list_install_components.dir
+C:/Users/jacky/Desktop/simple_multi/fed-gen/Main/src-gen/federate__server/out/build/x64-Debug/CMakeFiles/install.dir
+C:/Users/jacky/Desktop/simple_multi/fed-gen/Main/src-gen/federate__server/out/build/x64-Debug/CMakeFiles/install/local.dir
+C:/Users/jacky/Desktop/simple_multi/fed-gen/Main/src-gen/federate__server/out/build/x64-Debug/core/CMakeFiles/core.dir
+C:/Users/jacky/Desktop/simple_multi/fed-gen/Main/src-gen/federate__server/out/build/x64-Debug/core/CMakeFiles/edit_cache.dir
+C:/Users/jacky/Desktop/simple_multi/fed-gen/Main/src-gen/federate__server/out/build/x64-Debug/core/CMakeFiles/rebuild_cache.dir
+C:/Users/jacky/Desktop/simple_multi/fed-gen/Main/src-gen/federate__server/out/build/x64-Debug/core/CMakeFiles/list_install_components.dir
+C:/Users/jacky/Desktop/simple_multi/fed-gen/Main/src-gen/federate__server/out/build/x64-Debug/core/CMakeFiles/install.dir
+C:/Users/jacky/Desktop/simple_multi/fed-gen/Main/src-gen/federate__server/out/build/x64-Debug/core/CMakeFiles/install/local.dir
