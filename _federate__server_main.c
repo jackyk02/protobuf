@@ -45,7 +45,18 @@ void _federate__server_mainreaction_function_1(void* instance_args) {
     // **** This reaction is unordered.
     server.in_parameter->physical_time_of_arrival = self->_lf__networkMessage.physical_time_of_arrival;
     PyObject* message_byte_array = PyBytes_FromStringAndSize((char*)networkMessage->token->value, networkMessage->token->length);
-    PyObject* deserialized_message = PyObject_CallMethod(global_pickler, "loads", "O", message_byte_array);
+    //PyObject* deserialized_message = PyObject_CallMethod(global_pickler, "loads", "O", message_byte_array);
+    //PyObject* deserialized_message = PyObject_CallMethod(global_pickler, "ParseFromString", "0", message_byte_array);
+    // changed
+    PyObject* message_class = PyObject_GetAttrString(global_pickler, "Message");
+    PyObject* pb2 = PyObject_CallObject(message_class, NULL);
+
+    //PyObject_CallMethod(pb2, "ParseFromString", "0", message_byte_array);
+
+    PyObject* parse_method = PyObject_GetAttrString(pb2, "ParseFromString");
+    PyObject_CallFunctionObjArgs(parse_method, message_byte_array, NULL);
+
+    PyObject* deserialized_message = PyObject_GetAttrString(pb2, "data");
     if (deserialized_message == NULL) {
         if (PyErr_Occurred()) PyErr_Print();
         lf_print_error_and_exit("Could not deserialize deserialized_message.");
@@ -75,7 +86,14 @@ void _federate__server_mainreaction_function_2(void* instance_args) {
     // Sending from server.out_parameter in federate federate__server to client.in_parameter in federate federate__client
     if (!server.out_parameter->is_present) return;
     if (global_pickler == NULL) lf_print_error_and_exit("The pickle module is not loaded.");
-    PyObject* serialized_pyobject = PyObject_CallMethod(global_pickler, "dumps", "O", server.out_parameter->value);
+    // changed
+    // PyObject* serialized_pyobject = PyObject_CallMethod(global_pickler, "dumps", "O", server.out_parameter->value);
+    // Create a new message
+    PyObject* message_class = PyObject_GetAttrString(global_pickler, "Message");
+    PyObject* pb2 = PyObject_CallObject(message_class, NULL);
+    PyObject_SetAttrString(pb2, "data", server.out_parameter->value);
+    // Serialize the message
+    PyObject* serialized_pyobject = PyObject_CallMethod(pb2, "SerializeToString", NULL);
     if (serialized_pyobject == NULL) {
         if (PyErr_Occurred()) PyErr_Print();
         lf_print_error_and_exit("Could not serialize serialized_pyobject.");

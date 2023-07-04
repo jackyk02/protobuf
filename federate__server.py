@@ -79,8 +79,8 @@ class __serverreactor:
     
     
     def reaction_function_0(self, out_parameter):
-        temp = [1.000000005]*10
-        self.large_param = temp * 100000
+        size_in_bytes = 3 * 1024 * 1024  # 3 MB
+        self.large_param = bytes([0] * size_in_bytes)
         out_parameter.set(self.large_param)
         return 0
     def reaction_function_1(self, in_parameter, out_parameter):

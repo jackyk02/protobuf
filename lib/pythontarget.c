@@ -43,14 +43,14 @@ THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "tag.h"
 #include "util.h"
 
-////////////// Global variables ///////////////
-// The global Python object that holds the .py module that the
-// C runtime interacts with
-PyObject *globalPythonModule = NULL;
+ ////////////// Global variables ///////////////
+ // The global Python object that holds the .py module that the
+ // C runtime interacts with
+PyObject* globalPythonModule = NULL;
 
 // The dictionary of the Python module that is used to load
 // class objects from
-PyObject *globalPythonModuleDict = NULL;
+PyObject* globalPythonModuleDict = NULL;
 
 
 // Import pickle to enable native serialization
@@ -74,7 +74,7 @@ environment_t* top_level_environment = NULL;
  *      - action: Pointer to an action on the self struct.
  *      - offset: The time offset over and above that in the action.
  **/
-PyObject* py_schedule(PyObject *self, PyObject *args) {
+PyObject* py_schedule(PyObject* self, PyObject* args) {
     generic_action_capsule_struct* act = (generic_action_capsule_struct*)self;
     long long offset;
     PyObject* value = NULL;
@@ -82,7 +82,7 @@ PyObject* py_schedule(PyObject *self, PyObject *args) {
     if (!PyArg_ParseTuple(args, "L|O", &offset, &value))
         return NULL;
 
-    lf_action_base_t* action = (lf_action_base_t*)PyCapsule_GetPointer(act->action,"action");
+    lf_action_base_t* action = (lf_action_base_t*)PyCapsule_GetPointer(act->action, "action");
     if (action == NULL) {
         lf_print_error("Null pointer received.");
         exit(1);
@@ -119,16 +119,16 @@ PyObject* py_schedule(PyObject *self, PyObject *args) {
  * with a copy of the specified value.
  * See reactor.h for documentation.
  */
-PyObject* py_schedule_copy(PyObject *self, PyObject *args) {
+PyObject* py_schedule_copy(PyObject* self, PyObject* args) {
     generic_action_capsule_struct* act;
     long long offset;
     PyObject* value;
     int length;
 
-    if (!PyArg_ParseTuple(args, "OLOi" ,&act, &offset, &value, &length))
+    if (!PyArg_ParseTuple(args, "OLOi", &act, &offset, &value, &length))
         return NULL;
 
-    lf_action_base_t* action = (lf_action_base_t*)PyCapsule_GetPointer(act->action,"action");
+    lf_action_base_t* action = (lf_action_base_t*)PyCapsule_GetPointer(act->action, "action");
     if (action == NULL) {
         lf_print_error("Null pointer received.");
         exit(1);
@@ -145,7 +145,7 @@ PyObject* py_schedule_copy(PyObject *self, PyObject *args) {
 /**
  * Prototype for the main function.
  */
-int lf_reactor_c_main(int argc, const char *argv[]);
+int lf_reactor_c_main(int argc, const char* argv[]);
 
 /**
  * Prototype for lf_request_stop().
@@ -157,7 +157,7 @@ void _lf_request_stop(environment_t* env);
 /**
  * Stop execution at the conclusion of the current logical time.
  */
-PyObject* py_request_stop(PyObject *self, PyObject *args) {
+PyObject* py_request_stop(PyObject* self, PyObject* args) {
     _lf_request_stop(top_level_environment);
 
     Py_INCREF(Py_None);
@@ -205,7 +205,7 @@ const char** _lf_py_parse_argv_impl(PyObject* py_argv, size_t* argc) {
     }
 
     Py_ssize_t argv_size = PyList_Size(py_argv_parsed);
-    argv = malloc(argv_size * sizeof(char *));
+    argv = malloc(argv_size * sizeof(char*));
     for (Py_ssize_t i = 0; i < argv_size; i++) {
         PyObject* list_item = PyList_GetItem(py_argv_parsed, i);
         if (list_item == NULL) {
@@ -215,7 +215,7 @@ const char** _lf_py_parse_argv_impl(PyObject* py_argv, size_t* argc) {
             lf_print_error_and_exit("Could not get argv list item %zd.", i);
         }
 
-        PyObject *encoded_string = PyUnicode_AsEncodedString(list_item, "UTF-8", "strict");
+        PyObject* encoded_string = PyUnicode_AsEncodedString(list_item, "UTF-8", "strict");
         if (encoded_string == NULL) {
             if (PyErr_Occurred()) {
                 PyErr_Print();
@@ -254,12 +254,12 @@ PyObject* py_main(PyObject* self, PyObject* py_args) {
 
     // Load the pickle module
     if (global_pickler == NULL) {
-        global_pickler = PyImport_ImportModule("pickle");
+        global_pickler = PyImport_ImportModule("message_pb2");
         if (global_pickler == NULL) {
             if (PyErr_Occurred()) {
                 PyErr_Print();
             }
-            lf_print_error_and_exit("Failed to load the module 'pickle'.");
+            lf_print_error_and_exit("Failed to load the module 'message_pb2'.");
         }
     }
 
@@ -270,10 +270,10 @@ PyObject* py_main(PyObject* self, PyObject* py_args) {
     LF_PRINT_DEBUG("Initialized the Python interpreter.");
 
     Py_BEGIN_ALLOW_THREADS
-    lf_reactor_c_main(argc, argv);
+        lf_reactor_c_main(argc, argv);
     Py_END_ALLOW_THREADS
 
-    Py_INCREF(Py_None);
+        Py_INCREF(Py_None);
     return Py_None;
 }
 
@@ -289,7 +289,7 @@ PyObject* py_main(PyObject* self, PyObject* py_args) {
  * @see schedule_copy
  * @see request_stop
  */
-static PyMethodDef GEN_NAME(MODULE_NAME,_methods)[] = {
+static PyMethodDef GEN_NAME(MODULE_NAME, _methods)[] = {
   {"start", py_main, METH_VARARGS, NULL},
   {"schedule_copy", py_schedule_copy, METH_VARARGS, NULL},
   {"tag", py_lf_tag, METH_NOARGS, NULL},
@@ -323,8 +323,8 @@ static PyModuleDef MODULE_NAME = {
  * will be called PyInit_LinguaFrancaFoo
  */
 PyMODINIT_FUNC
-GEN_NAME(PyInit_,MODULE_NAME)(void) {
-    PyObject *m;
+GEN_NAME(PyInit_, MODULE_NAME)(void) {
+    PyObject* m;
 
     // Initialize the port_capsule type
     if (PyType_Ready(&py_port_capsule_t) < 0) {
@@ -356,7 +356,7 @@ GEN_NAME(PyInit_,MODULE_NAME)(void) {
 
     // Add the port_capsule type to the module's dictionary
     Py_INCREF(&py_port_capsule_t);
-    if (PyModule_AddObject(m, "port_capsule", (PyObject *) &py_port_capsule_t) < 0) {
+    if (PyModule_AddObject(m, "port_capsule", (PyObject*)&py_port_capsule_t) < 0) {
         Py_DECREF(&py_port_capsule_t);
         Py_DECREF(m);
         return NULL;
@@ -365,7 +365,7 @@ GEN_NAME(PyInit_,MODULE_NAME)(void) {
 
     // Add the action_capsule type to the module's dictionary
     Py_INCREF(&py_action_capsule_t);
-    if (PyModule_AddObject(m, "action_capsule_t", (PyObject *) &py_action_capsule_t) < 0) {
+    if (PyModule_AddObject(m, "action_capsule_t", (PyObject*)&py_action_capsule_t) < 0) {
         Py_DECREF(&py_action_capsule_t);
         Py_DECREF(m);
         return NULL;
@@ -373,7 +373,7 @@ GEN_NAME(PyInit_,MODULE_NAME)(void) {
 
     // Add the Tag type to the module's dictionary
     Py_INCREF(&PyTagType);
-    if (PyModule_AddObject(m, "Tag", (PyObject *) &PyTagType) < 0) {
+    if (PyModule_AddObject(m, "Tag", (PyObject*)&PyTagType) < 0) {
         Py_DECREF(&PyTagType);
         Py_DECREF(m);
         return NULL;
@@ -381,7 +381,7 @@ GEN_NAME(PyInit_,MODULE_NAME)(void) {
 
     // Add the Time type to the module's dictionary
     Py_INCREF(&PyTimeType);
-    if (PyModule_AddObject(m, "time", (PyObject *) &PyTimeType) < 0) {
+    if (PyModule_AddObject(m, "time", (PyObject*)&PyTimeType) < 0) {
         Py_DECREF(&PyTimeType);
         Py_DECREF(m);
         return NULL;
@@ -436,7 +436,7 @@ PyObject* convert_C_port_to_py(void* port, int width) {
     ((generic_port_capsule_struct*)cap)->width = width;
 
     if (width == -2) {
-        generic_port_instance_struct* cport = (generic_port_instance_struct *) port;
+        generic_port_instance_struct* cport = (generic_port_instance_struct*)port;
         FEDERATED_ASSIGN_FIELDS(((generic_port_capsule_struct*)cap), cport);
 
         ((generic_port_capsule_struct*)cap)->is_present =
@@ -451,7 +451,8 @@ PyObject* convert_C_port_to_py(void* port, int width) {
 
         //Py_INCREF(cport->value);
         ((generic_port_capsule_struct*)cap)->value = cport->value;
-    } else {
+    }
+    else {
         // Multiport. Value of the multiport itself cannot be accessed, so we set it to
         // None.
         Py_INCREF(Py_None);
@@ -572,7 +573,7 @@ get_python_function(string module, string class, int instance_id, string func) {
 
         // Set the Python search path to be the current working directory
         char cwd[PATH_MAX];
-        if ( getcwd(cwd, sizeof(cwd)) == NULL) {
+        if (getcwd(cwd, sizeof(cwd)) == NULL) {
             lf_print_error_and_exit("Failed to get the current working directory.");
         }
 
@@ -619,7 +620,7 @@ get_python_function(string module, string class, int instance_id, string func) {
         // Get the class list
         Py_INCREF(globalPythonModuleDict);
         pClasses = PyDict_GetItem(globalPythonModuleDict, list_name);
-        if (pClasses == NULL){
+        if (pClasses == NULL) {
             PyErr_Print();
             lf_print_error("Failed to load class list \"%s\" in module %s.", class, module);
             /* Release the thread. No Python API allowed beyond this point. */
@@ -648,7 +649,7 @@ get_python_function(string module, string class, int instance_id, string func) {
         // Check if the funciton is loaded properly
         // and if it is callable
         if (pFunc && PyCallable_Check(pFunc)) {
-            LF_PRINT_DEBUG("Calling function %s from class %s[%d].", func , class, instance_id);
+            LF_PRINT_DEBUG("Calling function %s from class %s[%d].", func, class, instance_id);
             Py_INCREF(pFunc);
             /* Release the thread. No Python API allowed beyond this point. */
             PyGILState_Release(gstate);
@@ -663,7 +664,8 @@ get_python_function(string module, string class, int instance_id, string func) {
         }
         Py_XDECREF(pFunc);
         Py_DECREF(globalPythonModule);
-    } else {
+    }
+    else {
         PyErr_Print();
         lf_print_error("Failed to load \"%s\".", module);
     }
