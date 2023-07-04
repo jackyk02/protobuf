@@ -254,7 +254,9 @@ PyObject* py_main(PyObject* self, PyObject* py_args) {
 
     // Load the pickle module
     if (global_pickler == NULL) {
-        global_pickler = PyImport_ImportModule("message_pb2");
+        PyObject* temp = PyImport_ImportModule("message_pb2");
+        global_pickler = PyObject_CallMethod(temp, "Message", NULL);
+
         if (global_pickler == NULL) {
             if (PyErr_Occurred()) {
                 PyErr_Print();

@@ -48,9 +48,13 @@ void _federate__server_mainreaction_function_1(void* instance_args) {
     //PyObject* deserialized_message = PyObject_CallMethod(global_pickler, "loads", "O", message_byte_array);
     //PyObject* deserialized_message = PyObject_CallMethod(global_pickler, "ParseFromString", "0", message_byte_array);
     // changed
-    PyObject* pb2 = PyObject_CallMethod(global_pickler, "Message", NULL);
-    PyObject_CallMethod(pb2, "ParseFromString", "O", message_byte_array);
-    PyObject* deserialized_message = PyObject_GetAttrString(pb2, "data");
+    //PyObject* pb2 = PyObject_CallMethod(global_pickler, "Message", NULL);
+    PyObject_CallMethod(global_pickler, "ParseFromString", "O", message_byte_array);
+    PyObject* deserialized_message = PyObject_GetAttrString(global_pickler, "data");
+    LF_PRINT_DEBUG("Deserializer!!");
+    //LF_PRINT_DEBUG("PB2 Reference COUNT: %d!!!!!!!!!!!!!!!!!!!!!!", Py_REFCNT((PyObject*)pb2));
+    //LF_PRINT_DEBUG("message_byte_array Reference COUNT: %d!!!!!!!!!!!!!!!!!!!!!!", Py_REFCNT((PyObject*)message_byte_array));
+    //LF_PRINT_DEBUG("deserialized_message Reference COUNT: %d!!!!!!!!!!!!!!!!!!!!!!", Py_REFCNT((PyObject*)deserialized_message));
 
     if (deserialized_message == NULL) {
         if (PyErr_Occurred()) PyErr_Print();
@@ -90,9 +94,14 @@ void _federate__server_mainreaction_function_2(void* instance_args) {
     PyObject_SetAttrString(pb2, "data", server.out_parameter->value);
     PyObject* serialized_pyobject = PyObject_CallMethod(pb2, "SerializeToString", NULL); */
 
-    PyObject* pb2 = PyObject_CallMethod(global_pickler, "Message", NULL);
-    PyObject_SetAttrString(pb2, "data", server.out_parameter->value);
-    PyObject* serialized_pyobject = PyObject_CallMethod(pb2, "SerializeToString", NULL);
+    //PyObject* pb2 = PyObject_CallMethod(global_pickler, "Message", NULL);
+    PyObject_SetAttrString(global_pickler, "data", server.out_parameter->value);
+    PyObject* serialized_pyobject = PyObject_CallMethod(global_pickler, "SerializeToString", NULL);
+
+    LF_PRINT_DEBUG("Serializer!!");
+    //LF_PRINT_DEBUG("PB2 Reference COUNT: %d!!!!!!!!!!!!!!!!!!!!!!", Py_REFCNT((PyObject*)pb2));
+    //LF_PRINT_DEBUG("server out value Reference COUNT: %d!!!!!!!!!!!!!!!!!!!!!!", Py_REFCNT((PyObject*)server.out_parameter->value));
+    //LF_PRINT_DEBUG("serialized_pyobject Reference COUNT: %d!!!!!!!!!!!!!!!!!!!!!!", Py_REFCNT((PyObject*)serialized_pyobject));
 
     if (serialized_pyobject == NULL) {
         if (PyErr_Occurred()) PyErr_Print();

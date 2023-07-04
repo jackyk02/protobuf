@@ -48,6 +48,7 @@ PyTypeObject py_port_capsule_t;
  * @param py_object A PyObject with count 1 or greater.
  */
 void python_count_decrement(void* py_object) {
+    LF_PRINT_DEBUG("IN Reference COUNT: %d!!!!!!!!!!!!!!!!!!!!!!", Py_REFCNT((PyObject*)py_object));
     Py_XDECREF((PyObject*)py_object);
 }
 
@@ -56,8 +57,9 @@ void python_count_decrement(void* py_object) {
  * @param py_object A PyObject with count 1 or greater.
  */
 void output_port_destructor(void* py_object) {
+    LF_PRINT_DEBUG("OUT Reference COUNT: %d!!!!!!!!!!!!!!!!!!!!!!", Py_REFCNT((PyObject*)py_object));
     Py_XDECREF((PyObject*)py_object);
-    Py_XDECREF((PyObject*)py_object);
+    //Py_XDECREF((PyObject*)py_object);
 }
 
 //////////// set Function(s) /////////////
